@@ -1,7 +1,7 @@
 package com.example.julia.dragdroptworecyclerviews;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,52 +15,65 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements Listener {
 
-    @BindView(R.id.recyclerview_top) RecyclerView recyclerViewTop;
-    @BindView(R.id.recyclerview_bottom) RecyclerView recyclerViewBottom;
-    @BindView(R.id.text_empty_list_top) TextView textEmptyListTop;
-    @BindView(R.id.text_empty_list_bottom) TextView textEmptyListBottom;
+    @BindView(R.id.rvTop)
+    RecyclerView rvTop;
+    @BindView(R.id.rvBottom)
+    RecyclerView rvBottom;
+    @BindView(R.id.tvEmptyListTop)
+    TextView tvEmptyListTop;
+    @BindView(R.id.tvEmptyListBottom)
+    TextView tvEmptyListBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        LinearLayoutManager layoutManagerTop = new LinearLayoutManager(this);
-        layoutManagerTop.setOrientation(LinearLayoutManager.HORIZONTAL);
-        LinearLayoutManager layoutManagerBottom = new LinearLayoutManager(this);
-        layoutManagerBottom.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewTop.setLayoutManager(layoutManagerTop);
-        recyclerViewBottom.setLayoutManager(layoutManagerBottom);
 
-        List<String> list = new ArrayList<>();
-        list.add("A");
-        list.add("B");
+        initTopRecyclerView();
+        initBottomRecyclerView();
 
-        ListAdapter mTopListAdapter = new ListAdapter(list, this);
-        recyclerViewTop.setAdapter(mTopListAdapter);
+        tvEmptyListTop.setVisibility(View.GONE);
+        tvEmptyListBottom.setVisibility(View.GONE);
+    }
 
-        List<String> list2 = new ArrayList<>();
-        list2.add("C");
-        list2.add("D");
+    private void initTopRecyclerView() {
+        rvTop.setLayoutManager(new LinearLayoutManager(
+                this, LinearLayoutManager.HORIZONTAL, false));
 
-        ListAdapter mBottomListAdapter = new ListAdapter(list2, this);
-        recyclerViewBottom.setAdapter(mBottomListAdapter);
+        List<String> topList = new ArrayList<>();
+        topList.add("A");
+        topList.add("B");
 
-        textEmptyListTop.setOnDragListener(mTopListAdapter.getDragInstance());
-        textEmptyListTop.setVisibility(View.GONE);
-        textEmptyListBottom.setOnDragListener(mTopListAdapter.getDragInstance());
-        textEmptyListBottom.setVisibility(View.GONE);
+        ListAdapter topListAdapter = new ListAdapter(topList, this);
+        rvTop.setAdapter(topListAdapter);
+        tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
+        rvTop.setOnDragListener(topListAdapter.getDragInstance());
+    }
+
+    private void initBottomRecyclerView() {
+        rvBottom.setLayoutManager(new LinearLayoutManager(
+                this, LinearLayoutManager.HORIZONTAL, false));
+
+        List<String> bottomList = new ArrayList<>();
+        bottomList.add("C");
+        bottomList.add("D");
+
+        ListAdapter bottomListAdapter = new ListAdapter(bottomList, this);
+        rvBottom.setAdapter(bottomListAdapter);
+        tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
+        rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
     }
 
     @Override
     public void setEmptyListTop(boolean visibility) {
-        textEmptyListTop.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        recyclerViewTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        tvEmptyListTop.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        rvTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public void setEmptyListBottom(boolean visibility) {
-        textEmptyListBottom.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        recyclerViewBottom.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        tvEmptyListBottom.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        rvBottom.setVisibility(visibility ? View.GONE : View.VISIBLE);
     }
 }

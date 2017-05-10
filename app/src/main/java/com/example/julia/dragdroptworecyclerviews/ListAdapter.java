@@ -8,17 +8,23 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
-class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private List<String> mList;
-    private Listener mListener;
+class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder>
+        implements View.OnTouchListener {
+
+    private List<String> list;
+    private Listener listener;
 
     ListAdapter(List<String> list, Listener listener) {
-        this.mList = list;
-        this.mListener = listener;
+        this.list = list;
+        this.listener = listener;
     }
 
     @Override
@@ -30,47 +36,60 @@ class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
     @Override
     public void onBindViewHolder(ListViewHolder holder, int position) {
-        holder.text.setText(mList.get(position));
+        holder.text.setText(list.get(position));
         holder.frameLayout.setTag(position);
-        holder.frameLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch(motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        ClipData data = ClipData.newPlainText("", "");
-                        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            view.startDragAndDrop(data, shadowBuilder, view, 0);
-                        } else {
-                            view.startDrag(data, shadowBuilder, view, 0);
-                        }
-                        return true;
+        holder.frameLayout.setOnTouchListener(this);
+        holder.frameLayout.setOnDragListener(new DragListener(listener));
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    v.startDragAndDrop(data, shadowBuilder, v, 0);
+                } else {
+                    v.startDrag(data, shadowBuilder, v, 0);
                 }
-                return false;
-            }
-        });
-        holder.frameLayout.setOnDragListener(new DragListener(mListener));
+                return true;
+        }
+        return false;
+    }
+
+    List<String> getList() {
+        return list;
+    }
+
+    void updateList(List<String> list) {
+        this.list = list;
     }
 
     DragListener getDragInstance() {
-        if (mListener != null) {
-            return new DragListener(mListener);
+        if (listener != null) {
+            return new DragListener(listener);
         } else {
             Log.e("ListAdapter", "Listener wasn't initialized!");
             return null;
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mList.size();
-    }
+    class ListViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.text)
+        TextView text;
+        @BindView(R.id.frame_layout_item)
+        FrameLayout frameLayout;
 
-    List<String> getList() {
-        return mList;
-    }
-
-    void updateList(List<String> list) {
-        mList = list;
+        ListViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
     }
 }
