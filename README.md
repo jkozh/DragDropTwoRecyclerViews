@@ -1,16 +1,14 @@
 # Drag and Drop between two `RecyclerView` 's
 
-I made some code example to demonstrate dragging and dropping from one `RecyclerView` into another.
+An example of dragging and dropping from one `RecyclerView` into another `RecyclerView`.
 You can easily change the orientation of `RecyclerView` in `LayoutManager` from `Horizontal` to `Vertical`.
 
 <img src="https://github.com/jkozh/DragDropTwoRecyclerViews/blob/master/art/screen.gif" width="30%"/>
 
-### Powered By
-☕
 
 ## License
 ```
-Copyright 2017 Julia Kozhukhovskaya
+Copyright 2020 Julia Kozhukhovskaya
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
