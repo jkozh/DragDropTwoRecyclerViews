@@ -1,4 +1,6 @@
-# Drag and Drop between two `RecyclerView` 's
+### Drag and Drop between two `RecyclerView` 's
+
+Kotlin Version - https://github.com/jkozh/DragDropTwoLists
 
 An example of dragging and dropping from one `RecyclerView` into another `RecyclerView`.
 You can easily change the orientation of `RecyclerView` in `LayoutManager` from `Horizontal` to `Vertical`.
